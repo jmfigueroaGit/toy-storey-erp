@@ -6,6 +6,9 @@ import {
     CUSTOMER_CREATE_SUCCESS,
     CUSTOMER_CREATE_FAIL,
     CUSTOMER_CREATE_RESET,
+    CUSTOMER_DETAILS_REQUEST,
+    CUSTOMER_DETAILS_SUCCESS,
+    CUSTOMER_DETAILS_FAIL,
   } from '../constants/userConstants'
 
 
@@ -32,6 +35,19 @@ export const customerCreateReducer = (state = { }, action) => {
       return { loading: false, error: action.payload };
     case CUSTOMER_CREATE_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const customerDetailsReducer = (state = { loading: true }, action) => {
+  switch (action.type) {
+   case CUSTOMER_DETAILS_REQUEST:
+      return { loading: true };
+    case CUSTOMER_DETAILS_SUCCESS:
+      return { loading: false, customer: action.payload };
+    case CUSTOMER_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

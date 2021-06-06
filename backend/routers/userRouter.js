@@ -10,7 +10,11 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const customers = await Customer.find({})
-    res.json(customers)
+    if (customers) {
+      res.status(200).json(customers)
+    } else {
+      res.status(500).send({ message: 'Failed fetching customerlist' })
+    }
   })
 )
 
@@ -41,6 +45,21 @@ router.post(
       })
     } else {
       res.status(401).send({ message: 'Add Customer Failed'})
+    }
+  })
+)
+
+
+router.get(
+  '/details',
+  asyncHandler(async (req, res) => {
+    const customer = await Customer.findOne({ 'fullName': req.body.fullName });
+    if (customer) {
+      res.send(customer);
+      console.log('BACKEND: customer._id', customer._id)
+      console.log('BACKEND: customer.name', customer.fullName)
+    } else {
+      res.status(404).send({ message: 'Customer Not Found' });
     }
   })
 )

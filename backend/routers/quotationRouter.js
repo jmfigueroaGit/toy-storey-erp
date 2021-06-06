@@ -70,19 +70,23 @@ router.post(
     if (req.body.orderItems.length === 0) {
       res.status(400).send({ message: 'Order line is empty' });
     } else {
-      const order = await Quotation.create({
-        customer,
-        invoiceAddress,
-        orderItems,
-        deliveryAddress,
-        itemsPrice,
-        shippingFee,
-        totalPrice,
-      });
-      const createdQuotation = await order.save();
-      res
-        .status(201)
-        .send({ message: 'New Order Created', quotation: createdQuotation });
+      if(customer && invoiceAddress && deliveryAddress) {
+        const order = await Quotation.create({
+          customer,
+          invoiceAddress,
+          orderItems,
+          deliveryAddress,
+          itemsPrice,
+          shippingFee,
+          totalPrice,
+        });
+        const createdQuotation = await order.save();
+        res
+          .status(201)
+          .send({ message: 'New Order Created', quotation: createdQuotation });
+      } else {
+        res.status(400).send({ message: 'Customer details is empty. Enter a valid customer name.' })
+      }
     }
   })
 )
@@ -156,16 +160,14 @@ router.put(
 // @route   /api/sales/quotations/:id/edit
 
 
-// @desc    Get Product Details by ProductID
-// @route /api/sales/quotation/:productId
+// @desc    Get Product Details by ProductID for add to cart
+// @route /api/sales/quotation/add/:productId
 router.get(
   '/add/:productId',
   asyncHandler(async (req, res) => {
     const product = await Product.findOne({ 'productId': req.params.productId });
     if (product) {
       res.send(product);
-      console.log('BACKEND: product._id', product._id)
-      console.log('BACKEND: product.productName', product.productName)
     } else {
       res.status(404).send({ message: 'Product Not Found' });
     }

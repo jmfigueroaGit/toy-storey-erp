@@ -23,8 +23,8 @@ function App() {
       <main>
         <Container>
           <Route path='/sales/quotations/:id' component={QuotationScreen} />
-          <Route path='/sales/create/quotation' component={QuotationCreateScreen} />
-          <Route path='/sales/quotations/' exact component={QuotationListScreen} />
+          <Route path='/sales/create-quotation' component={QuotationCreateScreen} />
+          <Route path='/sales/quotations' exact component={QuotationListScreen} />
           <Route path='/sales/customerlist' component={CustomerListScreen} />
           <Route path='/' exact component={HomeScreen} />
         </Container>

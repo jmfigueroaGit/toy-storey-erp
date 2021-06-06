@@ -40,7 +40,7 @@ export default function QuotationListScreen({ location, history }) {
   }
 
   const createQuotation = () => {
-    history.push('/sales/create/quotation')
+    history.push('/sales/create-quotation')
   }
 
   return (

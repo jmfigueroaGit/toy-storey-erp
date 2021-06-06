@@ -479,7 +479,7 @@ tr td:last-child {
 /* sales */
 .text-box{
     width: 50% !important;
-    border-radius: none !important;
+    /* border-radius: none !important; */
   /* border-bottom: 2px solid black !important; */
 }
 
@@ -513,12 +513,17 @@ tr td:last-child {
     color: white;
 }
 
+label{
+    margin-bottom: 10px;
+}
+
 input, input[list] {
     height: 38px;
     width: 465px;
     border: 1px solid rgb(207, 204, 204);
     border-radius: 4px;
 }
+
 
 datalist{
     margin-left: 10px;

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Container, Button, Form, Table, Modal } from 'react-bootstrap'
+import AsyncSelect from 'react-select/async'
+import { listCustomers, detailsCustomer } from '../actions/userActions'
 import { listProducts } from '../actions/productActions'
 import { addToCart, removeFromCart } from '../actions/cartActions'
 import { createQuotation } from '../actions/quotationActions.js'
@@ -14,7 +16,7 @@ import { CART_EMPTY } from '../constants/cartConstants'
 
 
 export default function QuotationCreateScreen({ history }) {
-  const[customer, setCustomer] = useState('')
+  const[customerName, setCustomerName] = useState('')
   const[invoiceAddress, setInvoiceAddress] = useState('')
   const[deliveryAddress, setDeliveryAddress] = useState('')
   
@@ -30,12 +32,21 @@ export default function QuotationCreateScreen({ history }) {
   }
 
   const[productId, setProductId] = useState('')
-  // const[description, setDescription] = useState('')
   const[quantity, setQuantity] = useState('')
   const[unitPrice, setUnitPrice] = useState('')
   
   const productList = useSelector(state => state.productList)
   const { loading, error, products } = productList
+
+  const customerList = useSelector(state => state.customerList)
+  const { 
+    loading: loadingCustomers, 
+    error: errorCustomers, 
+    customers 
+  } = customerList
+  
+  const customerDetails = useSelector(state => state.customerDetails)
+  const { customer } = customerDetails
 
   const cart = useSelector(state => state.cart)
 
@@ -46,52 +57,37 @@ export default function QuotationCreateScreen({ history }) {
     error: errorCreate, 
     quotation: createdQuotation,
   } = quotationCreate
+      
+  const toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
 
-  // const productOptions = useMemo(
-    //   () => 
+  cart.itemsPrice = toPrice(
+    cart.cartItems.reduce((a, c) => a + c.qty * c.price, 0)
+  );
+  cart.shippingFee = cart.itemsPrice > 10000 ? toPrice(0) : toPrice(100);
+  cart.totalPrice = cart.itemsPrice + cart.shippingFee;        
+      
+  const dispatch = useDispatch()
     
-    //     products && products.map((product) => ({
-      //       label: product.productName,
-      //       key: product._id
-      //     }))
-      // )
-  // const productOptions = () => {
-    //   if(products) {
-      //     products.map((product) => ({
-        //       label: product.productName,
-        //       key: product._id
-        //     }))
-        //   }
-        // }
+  useEffect(() => {
+    dispatch(listProducts())
+    dispatch(listCustomers())
+    if (successCreate) {
+      dispatch({ type: QUOTATION_CREATE_RESET });
+      history.push('/sales/quotations/');
+    }
+  }, [dispatch, history, successCreate])
 
-    const toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
-
-    cart.itemsPrice = toPrice(
-      cart.cartItems.reduce((a, c) => a + c.qty * c.price, 0)
-      );
-      cart.shippingFee = cart.itemsPrice > 10000 ? toPrice(0) : toPrice(100);
-      cart.totalPrice = cart.itemsPrice + cart.shippingFee;        
-      
-    const dispatch = useDispatch()
-      
-    useEffect(() => {
-      dispatch(listProducts())
-      if (successCreate) {
-        dispatch({ type: QUOTATION_CREATE_RESET });
-        history.push('/sales/quotations/');
-      }
-    }, [dispatch, history, successCreate])
-
-    const createQuotationHandler = () => {
-      dispatch(
-        createQuotation({
-          customer: customer,
-          invoiceAddress: invoiceAddress,
-          deliveryAddress: deliveryAddress,
-          orderItems: cart.cartItems,
-          itemsPrice: cart.itemsPrice,
-          shippingFee: cart.shippingFee,
-          totalPrice: cart.totalPrice,
+  const createQuotationHandler = () => {
+    console.log('save', )
+    dispatch(
+      createQuotation({
+        customer: customerName,
+        invoiceAddress: invoiceAddress,
+        deliveryAddress: deliveryAddress,
+        orderItems: cart.cartItems,
+        itemsPrice: cart.itemsPrice,
+        shippingFee: cart.shippingFee,
+        totalPrice: cart.totalPrice,
       })
     )
     // dispatch({ type: CART_EMPTY})
@@ -99,7 +95,7 @@ export default function QuotationCreateScreen({ history }) {
     console.log(cart.cartItems)
     console.log('create quotation')
   }
-
+  
   const discardHandler = () => {
     dispatch({ type: CART_EMPTY });
     localStorage.removeItem('cartItems');
@@ -114,6 +110,9 @@ export default function QuotationCreateScreen({ history }) {
 
   const submitHandler = (e) => {
     dispatch(addToCart(productId, quantity))
+    setProductId('')
+    setQuantity('')
+    setUnitPrice('')
     handleClose()
   }
 
@@ -121,59 +120,96 @@ export default function QuotationCreateScreen({ history }) {
     <div>
       <div>
         <Container>
+          {loading && <Loader></Loader>}
+          {error && <Message variant="danger">{errorCreate}</Message>}
+
+          {errorCustomers && <Message variant="danger">{errorCustomers}</Message>}
+
+          {loadingCreate && <Loader></Loader>}
+          {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+
           <h5 className='text-muted'>New Quotation</h5>
-          {/* TO DO: 
-            1. REMVOE CART ITEMS AFTER DISCARD AND SAVE
-            2. SAVE TO DB AFTER SAVING */}
           <span>
           <Button variant='danger' className='btn btn-sm mr-2' onClick={createQuotationHandler}>Save</Button>
           <Button variant='danger' className='btn btn-sm mr-2' onClick={discardHandler}>Discard</Button>
           </span>
           
-          {loading && <Loader></Loader>}
-          {error && <Message variant="danger">{errorCreate}</Message>}
-
-          {loadingCreate && <Loader></Loader>}
-          {errorCreate && <Message variant="danger">{errorCreate}</Message>}
         </Container>
         <hr/>
       </div>
 
       <FormContainer>
-        <Form>
-          <Form.Group controlId='customerName'>
-            <Form.Label>Customer Name</Form.Label>
-            <Form.Control
-              className='text-box'
-              type='text'
-              value={customer}
-              onChange={(e) => setCustomer(e.target.value)}
-            >
-            </Form.Control>
-          </Form.Group>
+        <form>
+          <div className='mb-3'>
+            <label htmlFor='customerName'>Customer Name</label>
+            <br />
+            <input 
+              id='customerName'
+              type="text" 
+              list="customer" 
+              placeholder='Enter customer name'
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              required
+            />
+            <datalist id="customer">
+              {
+                customers && customers.map((customer) => (
+                <option key={customer._id} value={customer.fullName}>
+                  {customer.fullName}
+                </option>
+                ))
+              }
+            </datalist>
+          </div>
 
-          <Form.Group controlId='invoiceAddress'>
-            <Form.Label>Invoice Address</Form.Label>
-            <Form.Control
-              className='text-box'
-              type='text'
+          <div>
+            <label htmlFor='invoiceAddress'>Invoice Address</label>
+            <br />
+            <input 
+              id='invoiceAddress'
+              type="text" 
+              list="email" 
+              placeholder='Enter invoice address'
               value={invoiceAddress}
-              onChange={(e) => setInvoiceAddress(e.target.value)}
-            >
-            </Form.Control>
-          </Form.Group>
+              onChange={(e) => {
+                setInvoiceAddress(e.target.value) }}
+              required
+            />
+            <datalist id="email">
+              {
+                customers && customers.map((customer) => (
+                <option key={customer._id} value={customer.email}>
+                  {customer.fullName}
+                </option>
+                ))
+              }
+            </datalist>
+          </div>
 
-          <Form.Group controlId='deliveryAddress'>
-            <Form.Label>Delivery Address</Form.Label>
-            <Form.Control
-              className='text-box'
-              type='text'
+          <div className='mb-3'>
+            <label htmlFor='deliveryAddress'>Delivery Address</label>
+            <br />
+            <input 
+              id='deliveryAddress'
+              type="text" 
+              list="address" 
+              placeholder='Enter delivery address'
               value={deliveryAddress}
               onChange={(e) => setDeliveryAddress(e.target.value)}
-            >
-            </Form.Control>
-          </Form.Group>
-        </Form>
+              required
+            />
+            <datalist id="address">
+              {
+                customers && customers.map((customer) => (
+                <option key={customer._id} value={customer.address}>
+                  {customer.fullName}
+                </option>
+                ))
+              }
+            </datalist>
+          </div>
+        </form>
       </FormContainer>
 
       <div>
@@ -220,22 +256,22 @@ export default function QuotationCreateScreen({ history }) {
               <>
                 <Modal.Body>
                     {/* TO DO:
-                      1. Add description to existing products
-                      2. Use input unit price instead of price from db, display as readonly on modal
-                      3. Fix cartItems >:((( 
-                      4. Modal from empty/reset after adding - omit reload */}
+                      3. Fix cartItems >:(((  */}
                     <form id='modalForm'>
-                      <Form.Group>
-                        <Form.Label>Product Name</Form.Label>
+                      <div className='mb-3'>
+                        <label htmlFor='productName'>Product Name</label>
                           <br />
                           <input 
+                            id='productName'
                             type="text" 
                             list="products" 
                             placeholder='Enter product'
                             value={productId}
                             onChange={(e) => {
                               setProductId(e.target.value)
-                              }}
+                              console.log('product idp',productId)
+                            }}
+                            required
                           />
                           <datalist id="products">
                             {
@@ -246,7 +282,7 @@ export default function QuotationCreateScreen({ history }) {
                               ))
                             }
                           </datalist>
-                      </Form.Group>
+                      </div>
       
                       {/* <Form.Group>
                         <Form.Label>Product Description</Form.Label>
@@ -257,7 +293,7 @@ export default function QuotationCreateScreen({ history }) {
                           />
                       </Form.Group> */}
       
-                      <Form.Group>
+                      <div className='mb-3'>
                         <label htmlFor="quantity">Quantity</label>
                         <br/>
                         <input
@@ -266,10 +302,11 @@ export default function QuotationCreateScreen({ history }) {
                           placeholder="Enter quantity"
                           value={quantity}
                           onChange={(e) => setQuantity(Number(e.target.value))}
+                          required
                         ></input>
-                      </Form.Group>
+                      </div>
       
-                      <Form.Group>
+                      <div className='mb-3'>
                         <label htmlFor="unitPrice">Unit Price</label>
                         <input
                           id="unitPrice"
@@ -278,10 +315,12 @@ export default function QuotationCreateScreen({ history }) {
                           value={unitPrice}
                           onChange={(e) => setUnitPrice(Number(e.target.value))}
                         ></input>
-                      </Form.Group>
+                      </div>
                     </form>
   
-                    <div> </div>
+                    <div>
+                    
+                    </div>
                   </Modal.Body>
                   
                   <Modal.Footer>

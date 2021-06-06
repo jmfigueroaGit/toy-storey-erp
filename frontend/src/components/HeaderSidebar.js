@@ -49,7 +49,7 @@ function HeaderSidebar() {
               <span>Projects</span></Link>
             </li>
             <li>
-              <Link to="/sales/quotations/"><span className="las la-shopping-bag"></span>
+              <Link to="/sales/quotations"><span className="las la-shopping-bag"></span>
               <span>Quotation</span></Link>
             </li>
             <li>
