@@ -6,6 +6,7 @@ import HeaderSidebar from './components/HeaderSidebar.js';
 import QuotationScreen from './screens/QuotationScreen.js'
 import QuotationCreateScreen from './screens/QuotationCreateScreen.js';
 import QuotationListScreen from './screens/QuotationListScreen.js';
+import CustomerScreen from './screens/CustomerScreen.js'
 import CustomerListScreen from './screens/CustomerListScreen.js';
 import HomeScreen from './screens/HomeScreen.js';
 
@@ -25,7 +26,8 @@ function App() {
           <Route path='/sales/quotations/:id' component={QuotationScreen} />
           <Route path='/sales/create-quotation' component={QuotationCreateScreen} />
           <Route path='/sales/quotations' exact component={QuotationListScreen} />
-          <Route path='/sales/customerlist' component={CustomerListScreen} />
+          <Route path='/sales/customerlist/:id' component={CustomerScreen} />
+          <Route path='/sales/customerlist' exact component={CustomerListScreen} />
           <Route path='/' exact component={HomeScreen} />
         </Container>
       </main>

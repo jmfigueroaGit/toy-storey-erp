@@ -139,7 +139,7 @@ export default function QuotationScreen({ match }) {
 
                   <ListGroup.Item>
                     <Row>
-                      <div>delivery</div>
+                      <div>Delivery</div>
                       <div>PHP {quote.shippingFee.toFixed(2)}</div>
                     </Row>
                   </ListGroup.Item>

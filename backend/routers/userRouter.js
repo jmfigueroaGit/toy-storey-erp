@@ -49,7 +49,6 @@ router.post(
   })
 )
 
-
 router.get(
   '/details',
   asyncHandler(async (req, res) => {
@@ -58,6 +57,56 @@ router.get(
       res.send(customer);
       console.log('BACKEND: customer._id', customer._id)
       console.log('BACKEND: customer.name', customer.fullName)
+    } else {
+      res.status(404).send({ message: 'Customer Not Found' });
+    }
+  })
+)
+
+router.get(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const customer = await Customer.findById(req.params.id);
+    if (customer) {
+      res.send(customer);
+      console.log('customer._id', customer._id)
+      console.log('customer.name', customer.fullName)
+    } else {
+      res.status(404).send({ message: 'Customer Not Found' });
+    }
+  })
+)
+
+router.put(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const customer = await Customer.findById(req.params.id);
+    if (customer) {
+      customer.fullName = req.body.fullName || customer.fullName;
+      customer.email = req.body.email || customer.email;
+      customer.address = req.body.address || customer.address;
+      customer.contact = req.body.contact || customer.contact;
+
+      const updatedCustomer = await customer.save();
+      
+      res.send({ message: 'User Updated', customer: updatedCustomer });
+    } else {
+      res.status(404).send({ message: 'Customer Not Found' });
+    }
+  })
+)
+
+
+router.delete(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const customer = await Customer.findById(req.params.id);
+    if (customer) {
+      if (customer) {
+        const deleteCustomer = await customer.remove()
+        console.log('deleted')
+        res.send({ message: 'User Deleted', customer: deleteCustomer });
+      }
     } else {
       res.status(404).send({ message: 'Customer Not Found' });
     }

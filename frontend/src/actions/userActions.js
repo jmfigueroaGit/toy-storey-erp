@@ -9,6 +9,12 @@ import {
   CUSTOMER_DETAILS_REQUEST,
   CUSTOMER_DETAILS_SUCCESS,
   CUSTOMER_DETAILS_FAIL,
+  CUSTOMER_UPDATE_REQUEST,
+  CUSTOMER_UPDATE_SUCCESS,
+  CUSTOMER_UPDATE_FAIL,
+  CUSTOMER_DELETE_REQUEST,
+  CUSTOMER_DELETE_SUCCESS,
+  CUSTOMER_DELETE_FAIL,
 } from '../constants/userConstants'
 
 export const listCustomers = () => async (dispatch) => {
@@ -16,10 +22,10 @@ export const listCustomers = () => async (dispatch) => {
     dispatch({ type: CUSTOMER_LIST_REQUEST })
 
     // if may json token at login function na
-    // const { userSignin: { userInfo }, } = getState()
+    // const { CUSTOMERSignin: { CUSTOMERInfo }, } = getState()
     // const config = { 
     //   headers: {
-    //     Authorization: `Bearer ${userInfo.token}`,
+    //     Authorization: `Bearer ${CUSTOMERInfo.token}`,
     //   },
     // }
     const { data } = await axios.get('http://localhost:5000/api/sales/customerlist')
@@ -70,3 +76,36 @@ export const detailsCustomer = (fullName) => async (dispatch) => {
     })
   }
 }
+
+export const updateCustomer = (customer) => async (dispatch) => {
+  dispatch({ type: CUSTOMER_UPDATE_REQUEST });
+  
+  try {
+    const { data } = await axios.put(
+      `http://localhost:5000/api/sales/customerlist/${customer._id}`, customer);
+
+    dispatch({ type: CUSTOMER_UPDATE_SUCCESS, payload: data });
+    // dispatch({ type: CUSTOMER_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: CUSTOMER_UPDATE_FAIL, payload: message });
+  }
+};
+
+export const deleteCustomer = (customerId) => async (dispatch) => {
+  dispatch({ type: CUSTOMER_DELETE_REQUEST, payload: customerId });
+  
+  try {
+    const { data } = await axios.delete(`http://localhost:5000/api/sales/customerlist/${customerId}`);
+    dispatch({ type: CUSTOMER_DELETE_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: CUSTOMER_DELETE_FAIL, payload: message });
+  }
+};

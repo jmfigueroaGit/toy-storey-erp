@@ -1,6 +1,7 @@
 import express from 'express'
 import asyncHandler from 'express-async-handler'
 import Quotation from '../models/quotationModel.js'
+import Customer from '../models/customerModel.js'
 import Product from '../models/productModel.js'
 import Cart from '../models/cartItemsModel.js'
 
@@ -57,35 +58,33 @@ router.get(
 router.post(
   '/new',
   asyncHandler(async (req, res) => {
-    const { 
-      customer,
-      invoiceAddress,
-      deliveryAddress,
-      orderItems,
-      itemsPrice,
-      shippingFee,
-      totalPrice,
-   } = req.body
+
+    const customer = await Customer.findOne({ 'fullName': req.body.name })
 
     if (req.body.orderItems.length === 0) {
       res.status(400).send({ message: 'Order line is empty' });
     } else {
-      if(customer && invoiceAddress && deliveryAddress) {
+      if(customer) {
+
         const order = await Quotation.create({
-          customer,
-          invoiceAddress,
-          orderItems,
-          deliveryAddress,
-          itemsPrice,
-          shippingFee,
-          totalPrice,
+          customer: req.body.name,
+          invoiceAddress: customer.email,
+          deliveryAddress: customer.address,
+          orderItems: req.body.orderItems,
+          itemsPrice: req.body.itemsPrice,
+          shippingFee: req.body.shippingFee,
+          totalPrice: req.body.totalPrice,
         });
         const createdQuotation = await order.save();
         res
           .status(201)
           .send({ message: 'New Order Created', quotation: createdQuotation });
       } else {
-        res.status(400).send({ message: 'Customer details is empty. Enter a valid customer name.' })
+        if (req.body.name) {
+          res.status(404).send({ message : 'Customer does not exist. Add them now on your list.'})
+        } else{
+          res.status(400).send({ message: 'Enter a valid customer name.' })
+        }
       }
     }
   })
