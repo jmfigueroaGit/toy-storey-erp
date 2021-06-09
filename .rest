@@ -10,7 +10,7 @@ GET http://localhost:5000/api/sales/customerlist/details
 Content-Type: application/json
 
 {
-    "fullName": "Laura Manlapaz"
+    "fullName": "Trisha Dominguez"
 }
 
 ###

@@ -52,11 +52,13 @@ router.post(
 router.get(
   '/details',
   asyncHandler(async (req, res) => {
-    const customer = await Customer.findOne({ 'fullName': req.body.fullName });
+    console.log(req.body.fullName)
+    const customer = await Customer.findOne({ fullName: req.body.fullName });
     if (customer) {
       res.send(customer);
       console.log('BACKEND: customer._id', customer._id)
       console.log('BACKEND: customer.name', customer.fullName)
+      console.log('BACKEND: customer.email', customer.email)
     } else {
       res.status(404).send({ message: 'Customer Not Found' });
     }

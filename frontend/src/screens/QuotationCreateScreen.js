@@ -1,3 +1,5 @@
+import emailjs from "emailjs-com"
+import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -16,7 +18,8 @@ import { CART_EMPTY } from '../constants/cartConstants'
 
 export default function QuotationCreateScreen({ history }) {
   const[customerName, setCustomerName] = useState('')
-  
+  const [customerId, setCustomerId] = useState('')
+
   const [show, setShow] = useState(false)
   const handleClose = () => {
     setShow(false)
@@ -27,7 +30,6 @@ export default function QuotationCreateScreen({ history }) {
 
   const[productId, setProductId] = useState('')
   const[quantity, setQuantity] = useState('')
-  // const[unitPrice, setUnitPrice] = useState('')
   
   const productList = useSelector(state => state.productList)
   const { loading, error, products } = productList
@@ -40,7 +42,11 @@ export default function QuotationCreateScreen({ history }) {
   } = customerList
   
   const customerDetails = useSelector(state => state.customerDetails)
-  const { customer } = customerDetails
+  const { 
+    loading: loadingDetails, 
+    error: errorDetails, 
+    customer 
+  } = customerDetails
 
   const cart = useSelector(state => state.cart)
 
@@ -65,6 +71,8 @@ export default function QuotationCreateScreen({ history }) {
   useEffect(() => {
     dispatch(listProducts())
     dispatch(listCustomers())
+    dispatch(detailsCustomer(customerId))
+    console.log('ue', customerId)
     if (errorCreate) {
       dispatch({ type: QUOTATION_CREATE_RESET });
       dispatch({ type: CART_EMPTY });
@@ -74,7 +82,7 @@ export default function QuotationCreateScreen({ history }) {
       dispatch({ type: QUOTATION_CREATE_RESET });
       history.push('/sales/quotations/');
     }
-  }, [dispatch, history, successCreate])
+  }, [dispatch, history, successCreate, errorCreate])
 
   const createQuotationHandler = () => {
     dispatch(
@@ -86,6 +94,25 @@ export default function QuotationCreateScreen({ history }) {
         totalPrice: cart.totalPrice,
       })
     )
+    
+    console.log('cqh customer', customer)
+    console.log('cqh customer email', customer.email)
+    var templateParams = {
+      name: customerName,
+      orderItems: cart.cartItems,
+      itemsPrice: cart.itemsPrice,
+      shippingFee: cart.shippingFee,
+      totalPrice: cart.totalPrice,
+      // email: customer.email
+    };
+     
+    emailjs.send('gmail', 'template_ngdfgsm', templateParams, "user_x0YouQzDgsn5hZdJ8u2Zs")
+      .then(response => {
+          console.log('SUCCESS!', response.status, response.text);
+      }, error => {
+          console.log('FAILED...', error);
+      }
+    );
   }
   
   const discardHandler = () => {
@@ -95,15 +122,11 @@ export default function QuotationCreateScreen({ history }) {
   }
 
   const removeFromCartHandler = (id) => {
-    console.log('removed')
     dispatch(removeFromCart(id))
-    console.log('cartItems', cart.cartItems)
   }
 
   const submitHandler = (e) => {
     dispatch(addToCart(productId, quantity))
-    console.log(cart.cartItems)
-    console.log('create quotation')
     setProductId('')
     setQuantity('')
     handleClose()
@@ -141,14 +164,14 @@ export default function QuotationCreateScreen({ history }) {
               type="text" 
               list="customer" 
               placeholder='Enter customer name'
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
+              value={customerId}
+              onChange={(e) => setCustomerId(e.target.value)}
               required
             />
             <datalist id="customer">
               {
                 customers && customers.map((customer) => (
-                <option key={customer._id} value={customer.fullName}>
+                <option key={customer._id} value={customer._id}>
                   {customer.fullName}
                 </option>
                 ))
@@ -164,7 +187,7 @@ export default function QuotationCreateScreen({ history }) {
               type="text" 
               list="email" 
               placeholder='Enter invoice address'
-              value={customerName}
+              value={customerId}
               // onChange={(e) => {
               //   setInvoiceAddress(e.target.value) }}
               readonly
@@ -188,7 +211,7 @@ export default function QuotationCreateScreen({ history }) {
               type="text" 
               list="address" 
               placeholder='Enter delivery address'
-              value={customerName}
+              value={customerId}
               // onChange={(e) => setDeliveryAddress(e.target.value)}
               readonly
             />
@@ -277,7 +300,7 @@ export default function QuotationCreateScreen({ history }) {
                             value={productId}
                             onChange={(e) => {
                               setProductId(e.target.value)
-                              console.log('product idp',productId)
+                              console.log('product id',productId)
                             }}
                             required
                           />

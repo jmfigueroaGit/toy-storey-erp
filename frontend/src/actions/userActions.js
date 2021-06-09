@@ -60,13 +60,15 @@ export const createCustomer = (fullName, email, address, contact) => async (disp
   }
 }
 
-export const detailsCustomer = (fullName) => async (dispatch) => {
+export const detailsCustomer = (customerId) => async (dispatch) => {
+  console.log('action', customerId)
   try {
     dispatch({ type: CUSTOMER_DETAILS_REQUEST })
-
-    const { data } = await axios.get('http://localhost:5000/api/sales/customerlist/details', fullName)
+    
+    const { data } = await axios.get(`http://localhost:5000/api/sales/customerlist/${customerId}`)
 
     dispatch({ type: CUSTOMER_DETAILS_SUCCESS, payload: data })
+    console.log('actions', data)
   } catch (error) {
     dispatch({ 
       type: CUSTOMER_DETAILS_FAIL,
@@ -75,6 +77,7 @@ export const detailsCustomer = (fullName) => async (dispatch) => {
         : error.message
     })
   }
+
 }
 
 export const updateCustomer = (customer) => async (dispatch) => {
