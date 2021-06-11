@@ -8,9 +8,8 @@ function HeaderSidebar() {
         <header>
           <h2>
             <label htmlFor="nav-toggle">
-                <span className="las la-bars"></span>
+                <span className="las la-house"></span>
             </label>
-            Dashboard
           </h2>
   
           <div className="search-wrapper">

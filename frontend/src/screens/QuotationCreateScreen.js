@@ -110,7 +110,7 @@ export default function QuotationCreateScreen({ history }) {
   }
 
   return (
-    <div>
+    <main>
       <div>
         <Container>
           {loading && <Loader></Loader>}
@@ -121,11 +121,7 @@ export default function QuotationCreateScreen({ history }) {
 
           {loadingCreate && <Loader></Loader>}
 
-          <h5 className='text-muted'>New Quotation</h5>
-          <span>
-          <Button variant='danger' className='btn btn-sm mr-2' onClick={createQuotationHandler}>Save</Button>
-          <Button variant='danger' className='btn btn-sm mr-2' onClick={discardHandler}>Discard</Button>
-          </span>
+          <h4>New Quotation</h4>
           
         </Container>
         <hr/>
@@ -140,7 +136,7 @@ export default function QuotationCreateScreen({ history }) {
               id='customerName'
               type="text" 
               list="customer" 
-              placeholder='Enter customer name'
+              placeholder='  Enter customer name'
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               required
@@ -163,7 +159,7 @@ export default function QuotationCreateScreen({ history }) {
               id='invoiceAddress'
               type="text" 
               list="email" 
-              placeholder='Enter invoice address'
+              placeholder='  Enter invoice address'
               value={customerName}
               // onChange={(e) => {
               //   setInvoiceAddress(e.target.value) }}
@@ -179,7 +175,7 @@ export default function QuotationCreateScreen({ history }) {
               }
             </datalist> */}
           </div>
-
+          <br />
           <div className='mb-3'>
             <label htmlFor='deliveryAddress'>Delivery Address</label>
             <br />
@@ -187,7 +183,7 @@ export default function QuotationCreateScreen({ history }) {
               id='deliveryAddress'
               type="text" 
               list="address" 
-              placeholder='Enter delivery address'
+              placeholder='  Enter delivery address'
               value={customerName}
               // onChange={(e) => setDeliveryAddress(e.target.value)}
               readonly
@@ -202,6 +198,11 @@ export default function QuotationCreateScreen({ history }) {
               }
             </datalist> */}
           </div>
+
+          <span>
+          <Button variant='danger' className='btn btn-sm mr-2' onClick={createQuotationHandler}>Save</Button>
+          <Button variant='danger' className='btn btn-sm mr-2' onClick={discardHandler}>Discard</Button>
+          </span>
         </form>
       </FormContainer>
 
@@ -211,7 +212,7 @@ export default function QuotationCreateScreen({ history }) {
           <Table striped bordered responsive className='table-lines'>
             <thead>
               <tr>
-                <th></th>
+                <th>ID Number</th>
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
@@ -273,7 +274,7 @@ export default function QuotationCreateScreen({ history }) {
                             id='productName'
                             type="text" 
                             list="products" 
-                            placeholder='Enter product'
+                            placeholder='  Enter product'
                             value={productId}
                             onChange={(e) => {
                               setProductId(e.target.value)
@@ -298,7 +299,7 @@ export default function QuotationCreateScreen({ history }) {
                         <input
                           id="quantity"
                           type="text"
-                          placeholder="Enter quantity"
+                          placeholder="  Enter quantity"
                           value={quantity}
                           onChange={(e) => setQuantity(Number(e.target.value))}
                           required
@@ -326,6 +327,6 @@ export default function QuotationCreateScreen({ history }) {
           </Modal>
         </Container>
       </div>
-    </div>
+    </main>
   )
 }
