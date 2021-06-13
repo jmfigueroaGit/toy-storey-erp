@@ -146,9 +146,8 @@ export default function QuotationCreateScreen({ history }) {
           {loadingCreate && <Loader></Loader>}
 
           <h4>New Quotation</h4>
-          
-        </Container>
         <hr/>
+        </Container>
       </div>
 
       <FormContainer>
@@ -194,7 +193,7 @@ export default function QuotationCreateScreen({ history }) {
                 customers && customers.map((customer) => (
                 <option key={customer._id} value={customer.email}>
                   {customer.fullName}
-                </option>
+                  </option>
                 ))
               }
             </datalist> */}
@@ -223,10 +222,7 @@ export default function QuotationCreateScreen({ history }) {
             </datalist> */}
           </div>
 
-          <span>
-          <Button variant='danger' className='btn btn-sm mr-2' onClick={createQuotationHandler}>Save</Button>
-          <Button variant='danger' className='btn btn-sm mr-2' onClick={discardHandler}>Discard</Button>
-          </span>
+          
         </form>
       </FormContainer>
 
@@ -280,7 +276,13 @@ export default function QuotationCreateScreen({ history }) {
           <Link to='#' className='text-decoration-none text-info' onClick={handleShow}>
             + Add Product
           </Link>
-          
+          <div className='mt-3'>
+            <span>
+              <Button variant='danger' className='btn btn-sm mr-2' onClick={createQuotationHandler}>Save</Button>
+              <Button variant='danger' className='btn btn-sm mr-2' onClick={discardHandler}>Discard</Button>
+            </span>
+          </div>
+
           {/* may warning dito sa backdrop */}
           <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
             <Modal.Header closeButton>

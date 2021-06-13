@@ -44,16 +44,16 @@ function HeaderSidebar() {
               <span>Customers</span></Link>
             </li>
             <li>
-              <Link to=""><span className="las la-clipboard-list"></span>
-              <span>Projects</span></Link>
+              <Link to="/inventory"><span className="las la-receipt"></span>
+              <span>Inventory</span></Link>
             </li>
             <li>
               <Link to="/sales/quotations"><span className="las la-shopping-bag"></span>
               <span>Quotation</span></Link>
             </li>
             <li>
-              <Link to=""><span className="las la-receipt"></span>
-              <span>Inventory</span></Link>
+              <Link to="/sales"><span className="las la-clipboard-list"></span>
+              <span>Sales</span></Link>
             </li>
             <li>
               <Link to=""><span className="las la-user-circle"></span>

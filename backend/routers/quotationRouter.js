@@ -10,7 +10,7 @@ const router = express.Router()
 // @desc    get all quotations
 // @route   /api/sales/quotations
 router.get(
-  '/',
+  '/quotations/',
   asyncHandler(async (req, res) => {
     const quotations = await Quotation.find({})
     if(quotations) {
@@ -56,7 +56,7 @@ router.get(
 // @desc    create new quotation
 // @route   /api/sales/quotations/new
 router.post(
-  '/new',
+  '/quotations/new',
   asyncHandler(async (req, res) => {
 
     const customer = await Customer.findOne({ 'fullName': req.body.name })
@@ -93,7 +93,7 @@ router.post(
 // @desc    get quotation details
 // @route   /api/sales/quotations
 router.get(
-  '/:id',
+  '/quotations/:id',
   asyncHandler(async (req, res) => {
     const quote = await Quotation.findById(req.params.id);
     if (quote) {
@@ -107,7 +107,7 @@ router.get(
 // @desc    delete a quotation
 // @route   /api/sales/quotations
 router.delete(
-  '/:id',
+  '/quotations/:id',
   asyncHandler(async (req, res) => {
     const quote = await Quotation.findById(req.params.id);
     if (quote) {
@@ -122,7 +122,7 @@ router.delete(
 // @desc    mark quotation paid
 // @route   /api/sales/quotations/:id/deliver
 router.put(
-  '/:id/pay',
+  '/quotations/:id/pay',
   asyncHandler(async (req, res) => {
     const quote = await Quotation.findById(req.params.id);
     if (quote) {
@@ -140,7 +140,7 @@ router.put(
 // @desc    deliver quotation
 // @route   /api/sales/quotations/:id/deliver
 router.put(
-  '/:id/deliver',
+  '/quotations/:id/deliver',
   asyncHandler(async (req, res) => {
     const quote = await Quotation.findById(req.params.id);
     if (quote) {
@@ -162,7 +162,7 @@ router.put(
 // @desc    Get Product Details by ProductID for add to cart
 // @route /api/sales/quotation/add/:productId
 router.get(
-  '/add/:productId',
+  '/quotations/add/:productId',
   asyncHandler(async (req, res) => {
     const product = await Product.findOne({ 'productId': req.params.productId });
     if (product) {
@@ -174,9 +174,9 @@ router.get(
 )
 
 router.get(
-  "/sales",
+  "/",
   asyncHandler(async (req, res) => {
-    const sales = await Quotation.find({});
+    const sales = await Quotation.find({ isPaid: 'true'});
     if (sales) {
       res.json(sales);
     } else {

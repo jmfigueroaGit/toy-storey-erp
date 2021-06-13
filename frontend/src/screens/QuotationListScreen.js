@@ -74,7 +74,7 @@ export default function QuotationListScreen({ location, history }) {
         <tbody>
           {quotations.map(quote => (
             <tr key={quote._id}>
-              <td className='p-2 m-1'>
+              <td >
                 <Button
                   type="button"
                   className="btn-light btn-sm px-2"

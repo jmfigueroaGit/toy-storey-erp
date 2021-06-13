@@ -26,11 +26,6 @@ router.post("/addProduct", async (req, res) => {
   res.send(product);
 });
 
-router.get("/readProduct", async (req, res) => {
-  const products = await Product.find({});
-  res.send(products);
-});
-
 router.post("/updateProduct", async (req, res) => {
   const product = await Product.findOneAndUpdate(
     { productId: req.body.productId },

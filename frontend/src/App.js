@@ -8,7 +8,11 @@ import QuotationCreateScreen from './screens/QuotationCreateScreen.js';
 import QuotationListScreen from './screens/QuotationListScreen.js';
 import CustomerScreen from './screens/CustomerScreen.js'
 import CustomerListScreen from './screens/CustomerListScreen.js';
+import AddProduct from "./screens/AddProductScreen.js";
+import ProductList from "./screens/ProductListScreen.js";
+import SalesList from "./screens/SalesListScreen.js";
 import HomeScreen from './screens/HomeScreen.js';
+
 
 // TO DO
 // ADD CHECKING FOR NONEXISTING ROUTES TO CODE
@@ -28,6 +32,9 @@ function App() {
           <Route path='/sales/quotations' exact component={QuotationListScreen} />
           <Route path='/sales/customerlist/:id' component={CustomerScreen} />
           <Route path='/sales/customerlist' exact component={CustomerListScreen} />
+          <Route exact path="/addProduct" component={AddProduct} />
+          <Route exact path="/sales" component={SalesList} />
+          <Route exact path="/inventory" component={ProductList} />
           <Route path='/' exact component={HomeScreen} />
         </Container>
       </main>

@@ -193,7 +193,7 @@ header label span {
 
 main {
     margin-top: 40px;
-    margin-left: 150px;
+    margin-left: 140px;
     padding: 2rem 1.5rem;
     background: #f1f5f9;
     min-height: calc(100vh - 60px);
@@ -533,4 +533,84 @@ datalist{
 /* .btn.quote-actions{
     background-color:gray;
 } */
- 
+  
+.app {
+width: 100vw;
+height: 100vh;
+}
+
+/*Table of Toys*/
+.table-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.table-container button {
+padding: 5px;
+margin: 5px;
+}
+
+table {
+border-collapse: collapse;
+}
+
+thead tr {
+border-top: 1px solid #f0f0f0;
+border-bottom: 2px solid #f0f0f0;
+}
+
+thead td {
+font-weight: 700;
+}
+
+thead th:hover {
+background-color: whitesmoke;
+cursor: pointer;
+}
+
+td {
+padding: 0.5rem 1rem;
+font-size: 0.9rem;
+color: #222;
+}
+
+td .status {
+display: inline-block;
+height: 10px;
+width: 10px;
+border-radius: 50%;
+margin-right: 1rem;
+}
+
+tr td:last-child {
+display: flex;
+align-items: center;
+}
+
+table tbody tr:nth-of-type(odd) {
+background-color: thistle;
+}
+
+.table-header {
+width: 95vw;
+display: flex;
+justify-content: space-between;
+}
+
+.table-header-right {
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+width: 23vw;
+}
+
+.table-responsive {
+width: 100%;
+overflow-x: auto;
+}
+
+.prompt {
+margin-top: 5px;
+height: 4vh;
+}
