@@ -113,7 +113,7 @@ function CustomerListScreen() {
   }
 
   return (
-    <>
+    <main>
       <span className='d-flex justify-content-between'>
         <h4>Customers</h4>
         <Link className='text-decoration-none text-info' onClick={handleShow}>
@@ -220,7 +220,7 @@ function CustomerListScreen() {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </main>
   )
 }
 

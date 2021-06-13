@@ -44,7 +44,7 @@ export default function QuotationListScreen({ location, history }) {
   }
 
   return (
-    <>
+    <main>
       <span className='d-flex justify-content-between'>
         <h4>Quotations</h4>
         <Link className='text-decoration-none text-info' onClick={createQuotation}>
@@ -115,6 +115,6 @@ export default function QuotationListScreen({ location, history }) {
       </Table>
       )}
       
-    </>
+    </main>
   )
 }

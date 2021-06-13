@@ -6,11 +6,8 @@ function HomeScreen() {
     return (
     <div>
     {/* Sidebar Component */}
- 
     <div className="main-content">
         {/* Header */}
-        
-
         <main>
             <div className="cards">
                 <div className="card-single">

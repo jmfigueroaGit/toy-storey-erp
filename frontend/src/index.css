@@ -44,7 +44,7 @@ main{
     height: 100%;
     background: var(--main-color);
     z-index: 100;
-    transition: width 300ms;
+    /*transition: width 300ms;*/
 }
 
 .sidebar-brand {
@@ -53,10 +53,10 @@ main{
     color: #fff;
 }
 
-.sidebar-brand span {
+/*.sidebar-brand span {
     display: inline-block;
     padding-right: 1rem;
-}
+}*/
 
 .sidebar-menu {
     margin-top: 1rem;
@@ -94,37 +94,37 @@ main{
     padding-right: 1rem;
 }
 
-#nav-toggle:checked + .sidebar {
+/*#nav-toggle:checked + .sidebar {
     width: 70px;
-}
+}*/
 
-#nav-toggle:checked + .sidebar .sidebar-brand,
+/*#nav-toggle:checked + .sidebar .sidebar-brand,
 #nav-toggle:checked + .sidebar li {
     padding-left: 1rem;
     text-align: center;
-}
+}*/
 
-#nav-toggle:checked + .sidebar li a {
+/*#nav-toggle:checked + .sidebar li a {
     padding-left: 0rem;
-}
+}*/
 
-#nav-toggle:checked + .sidebar .sidebar-brand h2 span:last-child,
+/*#nav-toggle:checked + .sidebar .sidebar-brand h2 span:last-child,
 #nav-toggle:checked + .sidebar li a span:last-child {
     display: none;
-}
+}*/
 
-#nav-toggle:checked ~ .main-content {
+/*#nav-toggle:checked ~ .main-content {
     margin-left: 70px;
 }
 
 #nav-toggle:checked ~ .main-content header {
     width: calc(100% - 70px);
     left: 70px;
-}
+}*/
 
 .main-content {
-    transition: margin-left 300ms;
-    margin-left: 345px;
+    /*transition: margin-left 300ms;*/
+    margin-left: 0px;
 }
 
 header {
@@ -138,7 +138,7 @@ header {
     width: calc(100% - 345px);
     top: 0;
     z-index: 100;
-    transition: left 300ms;
+    /*transition: left 300ms;*/
 }
 
 #nav-toggle {
@@ -192,10 +192,11 @@ header label span {
 }
 
 main {
-    margin-top: 85px;
+    margin-top: 40px;
+    margin-left: 150px;
     padding: 2rem 1.5rem;
     background: #f1f5f9;
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 60px);
 }
 
 .cards {
@@ -252,7 +253,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #ffffff;
 }
 
 .card-header button {
@@ -269,8 +270,8 @@ table {
 }
 
 thead tr {
-    border-top: 1px solid #f0f0f0;
-    border-bottom: 2px solid #f0f0f0;
+    border-top: 1px solid #fffdfd;
+    border-bottom: 2px solid #fffdfd;
 }
 
 thead td {
@@ -532,3 +533,4 @@ datalist{
 /* .btn.quote-actions{
     background-color:gray;
 } */
+ 
