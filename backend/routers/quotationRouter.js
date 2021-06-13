@@ -173,5 +173,16 @@ router.get(
   })
 )
 
+router.get(
+  "/sales",
+  asyncHandler(async (req, res) => {
+    const sales = await Quotation.find({});
+    if (sales) {
+      res.json(sales);
+    } else {
+      res.status(500);
+    }
+  })
+);
 
 export default router

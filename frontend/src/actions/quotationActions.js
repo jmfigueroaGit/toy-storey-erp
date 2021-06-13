@@ -27,6 +27,7 @@ export const createQuotation = (quotation) => async (dispatch) => {
 
     const { data } = await Axios.post('http://localhost:5000/api/sales/quotations/new', quotation);
     dispatch({ type: QUOTATION_CREATE_SUCCESS, payload: data.quotation });
+    console.log('actions', data.quotation)
     dispatch({ type: CART_EMPTY });
     localStorage.removeItem('cartItems');
   } catch (error) {
