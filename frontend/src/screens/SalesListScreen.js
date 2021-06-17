@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import Moment from "react-moment";
-import { Table, Button, Container } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 
 const ProductList = ({ history }) => {
 
@@ -62,16 +61,15 @@ const ProductList = ({ history }) => {
 
   return (
     <main>
-      <Container>
-        <div className="table-container">
-          {/* <div className="table-header"> */}
-            <div className="table-header-left">
-              <h2>Sales</h2>
-            </div>
-            <div className="table-header-right">
-              <span>Total Sales: Php {total}</span>
-            </div>
-          {/* </div> */}
+      <div className="text-center">
+        <h3 className='mb-3'>Sales</h3>
+      </div>
+      <div className='d-flex justify-content-between'>
+        <div></div>
+        <h5 className='text-end'><b>Total Sales: Php {total}</b></h5>
+      </div>
+      <>
+        <div className="table-container mt-3">
           <Table striped bordered responsive className="table-sm table-lines">
             <thead>
               <tr>
@@ -87,7 +85,7 @@ const ProductList = ({ history }) => {
                 </th>
   
                 <th>TOTAL</th>
-                <th>ACTION</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -115,7 +113,7 @@ const ProductList = ({ history }) => {
             </tbody>
           </Table>
         </div>
-      </Container>
+      </>
     </main>
   );
 };

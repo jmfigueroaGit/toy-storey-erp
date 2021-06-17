@@ -49,12 +49,10 @@ export default function QuotationScreen({ match }) {
 
   const paymentHandler = () => {
     dispatch(payOrder(quoteId))
-    // window.location.reload()
   }
   
   const deliverHandler = () => {
     dispatch(deliverOrder(quoteId))
-    // window.location.reload()
   }
 
   const goBack = () => {
@@ -65,138 +63,136 @@ export default function QuotationScreen({ match }) {
     : error ? ( <Message variant="danger">{error}</Message> ) 
     : (
       <main>
-        <Container>
+        <>
           <Button onClick={goBack} className='btn btn-light mt-3'>
             Go Back
           </Button>
-          {/* <div > */}
-            <h3 className='text-center pb-3'>QUOTE DETAILS</h3>
-            <Row className='d-flex align-items-start'>
-                <Col>
-                  <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                      <h4>Delivery</h4>
-                      <p>
-                        <strong>Name:</strong> {quote.customer} <br />
-                        <strong>Shipping Address: </strong> {quote.deliveryAddress}
-                      </p>
-                      {quote.isDelivered ? (
+          <h3 className='text-center py-3'>QUOTE DETAILS</h3>
+          <Row className='d-flex align-items-start'>
+              <Col>
+                <ListGroup variant='flush'>
+                  <ListGroup.Item>
+                    <h4>Delivery</h4>
+                    <p>
+                      <strong>Name:</strong> {quote.customer} <br />
+                      <strong>Shipping Address: </strong> {quote.deliveryAddress}
+                    </p>
+                    {quote.isDelivered ? (
+                      <Message variant="success">
+                        Delivered at {quote.deliveredAt.substring(0,10)}
+                      </Message>
+                    ) : (
+                      <Message variant="danger">Not Delivered</Message>
+                    )}
+                  </ListGroup.Item>
+  
+                  <ListGroup.Item>
+                      <h4>Payment</h4>
+                      
+                      {quote.isPaid ? (
                         <Message variant="success">
-                          Delivered at {quote.deliveredAt}
+                          Paid at {quote.paidAt.substring(0,10)}
                         </Message>
                       ) : (
-                        <Message variant="danger">Not Delivered</Message>
+                        <Message variant="danger">Not Paid</Message>
                       )}
-                    </ListGroup.Item>
-    
-                    <ListGroup.Item>
-                        <h4>Payment</h4>
-                        
-                        {quote.isPaid ? (
-                          <Message variant="success">
-                            Paid at {quote.paidAt}
-                          </Message>
-                        ) : (
-                          <Message variant="danger">Not Paid</Message>
-                        )}
-                    </ListGroup.Item>
-    
-                    <ListGroup.Item>
-                        <h4>Order Items</h4>
-                        <ListGroup variant='flush'>
-                          {quote.orderItems.map((item) => (
-                            <ListGroup.Item key={item.product}>
-                              <Row>
-                                <Col className="min-30">
-                                  {item.productName}
-                                </Col>
-        
-                                <div>
-                                  {item.qty} x PHP {item.price} = PHP {item.qty * item.price}
-                                </div>
-                              </Row>
-                            </ListGroup.Item>
-                          ))}
-                        </ListGroup>
-                    </ListGroup.Item>
-                  </ListGroup>
-                </Col>
-                <Col>
-                  <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                      <h4>Order Summary</h4>
-                    </ListGroup.Item>
+                  </ListGroup.Item>
   
-                    <ListGroup.Item>
-                      <Row>Status: &nbsp;
-                      {quote.isDelivered 
-                      ? <div className='text-success'>Delivered</div> 
-                      : quote.isPaid ? <div className='text-success'>Paid</div> 
-                      : <div className='text-danger'>Pending</div>}
-                      </Row>
-                    </ListGroup.Item>
-  
-                    <ListGroup.Item>
-                      <Row>
-                        <div>Items</div>
-                        <div>PHP {quote.itemsPrice.toFixed(2)}</div>
-                      </Row>
-                    </ListGroup.Item>
-  
-                    <ListGroup.Item>
-                      <Row>
-                        <div>Delivery</div>
-                        <div>PHP {quote.shippingFee.toFixed(2)}</div>
-                      </Row>
-                    </ListGroup.Item>
-                  
-                    <ListGroup.Item>
-                      <Row>
-                        <div>
-                          <strong> Order Total</strong>
-                        </div>
-                        <div>
-                          <strong>PHP {quote.totalPrice.toFixed(2)}</strong>
-                        </div>
-                      </Row>
-                    </ListGroup.Item>
+                  <ListGroup.Item>
+                      <h4>Order Items</h4>
+                      <ListGroup variant='flush'>
+                        {quote.orderItems.map((item) => (
+                          <ListGroup.Item key={item.product}>
+                            <Row>
+                              <Col className="min-30">
+                                {item.productName}
+                              </Col>
       
-                    {!quote.isPaid && (
-                      <ListGroup.Item>
-                        {loadingDeliver && <Loader></Loader>}
-                        {errorDeliver && (
-                          <Message variant="danger">{errorDeliver}</Message>
-                        )}
-                        <Button
-                          type="button"
-                          className="btn primary quote-actions"
-                          onClick={paymentHandler}
-                        >
-                          Mark Order as Paid
-                        </Button>
-                      </ListGroup.Item>
-                    )}
-  
-                    {quote.isPaid && !quote.isDelivered && (
-                      <ListGroup.Item>
-                        {loadingDeliver && <Loader></Loader>}
-                        {errorDeliver && (
-                          <Message variant="danger">{errorDeliver}</Message>
-                        )}
-                        <Button
-                          type="button"
-                          className="btn primary quote-actions"
-                          onClick={deliverHandler}
-                        >
-                          Deliver Order
-                        </Button>
-                      </ListGroup.Item>
-                    )}
-                  </ListGroup>
-                </Col>
-            </Row>
-          {/* </div> */}
-        </Container>
+                              <div>
+                                {item.qty} x PHP {item.price} = PHP {item.qty * item.price}
+                              </div>
+                            </Row>
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Col>
+              <Col>
+                <ListGroup variant='flush'>
+                  <ListGroup.Item>
+                    <h4>Order Summary</h4>
+                  </ListGroup.Item>
+
+                  <ListGroup.Item>
+                    <Row>Status: &nbsp;
+                    {quote.isDelivered 
+                    ? <div className='text-success'>Delivered</div> 
+                    : quote.isPaid ? <div className='text-success'>Paid</div> 
+                    : <div className='text-danger'>Pending</div>}
+                    </Row>
+                  </ListGroup.Item>
+
+                  <ListGroup.Item>
+                    <Row>
+                      <div>Items</div>
+                      <div>PHP {quote.itemsPrice.toFixed(2)}</div>
+                    </Row>
+                  </ListGroup.Item>
+
+                  <ListGroup.Item>
+                    <Row>
+                      <div>Delivery</div>
+                      <div>PHP {quote.shippingFee.toFixed(2)}</div>
+                    </Row>
+                  </ListGroup.Item>
+                
+                  <ListGroup.Item>
+                    <Row>
+                      <div>
+                        <strong> Order Total</strong>
+                      </div>
+                      <div>
+                        <strong>PHP {quote.totalPrice.toFixed(2)}</strong>
+                      </div>
+                    </Row>
+                  </ListGroup.Item>
+    
+                  {!quote.isPaid && (
+                    <ListGroup.Item>
+                      {loadingDeliver && <Loader></Loader>}
+                      {errorDeliver && (
+                        <Message variant="danger">{errorDeliver}</Message>
+                      )}
+                      <Button
+                        type="button"
+                        className="btn primary quote-actions"
+                        onClick={paymentHandler}
+                      >
+                        Mark Order as Paid
+                      </Button>
+                    </ListGroup.Item>
+                  )}
+
+                  {quote.isPaid && !quote.isDelivered && (
+                    <ListGroup.Item>
+                      {loadingDeliver && <Loader></Loader>}
+                      {errorDeliver && (
+                        <Message variant="danger">{errorDeliver}</Message>
+                      )}
+                      <Button
+                        type="button"
+                        className="btn primary quote-actions"
+                        onClick={deliverHandler}
+                      >
+                        Deliver Order
+                      </Button>
+                    </ListGroup.Item>
+                  )}
+                </ListGroup>
+              </Col>
+          </Row>
+        </>
       </main>
   )
 }

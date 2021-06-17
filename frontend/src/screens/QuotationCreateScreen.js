@@ -18,7 +18,27 @@ import { CART_EMPTY } from '../constants/cartConstants'
 
 export default function QuotationCreateScreen({ history }) {
   const[customerName, setCustomerName] = useState('')
-
+  const[productId, setProductId] = useState('')
+  const[quantity, setQuantity] = useState('')
+  
+  const productList = useSelector(state => state.productList)
+  const { loading, error, products } = productList
+  
+  const customerList = useSelector(state => state.customerList)
+  const { 
+    loading: loadingCustomers, 
+    error: errorCustomers, 
+    customers 
+  } = customerList
+  
+  const cart = useSelector(state => state.cart)
+  const quotationCreate = useSelector(state => state.quotationCreate)
+  const { 
+    success: successCreate, 
+    error: errorCreate, 
+    quotation: createdQuotation,
+  } = quotationCreate
+  
   const [show, setShow] = useState(false)
   const handleClose = () => {
     setShow(false)
@@ -27,42 +47,12 @@ export default function QuotationCreateScreen({ history }) {
   }
   const handleShow = () => setShow(true)
 
-  const[productId, setProductId] = useState('')
-  const[quantity, setQuantity] = useState('')
-  
-  const productList = useSelector(state => state.productList)
-  const { loading, error, products } = productList
-
-  const customerList = useSelector(state => state.customerList)
-  const { 
-    loading: loadingCustomers, 
-    error: errorCustomers, 
-    customers 
-  } = customerList
-  
-  // const customerDetails = useSelector(state => state.customerDetails)
-  // const { 
-  //   loading: loadingDetails, 
-  //   error: errorDetails, 
-  //   customer 
-  // } = customerDetails
-
-  const cart = useSelector(state => state.cart)
-
-  const quotationCreate = useSelector(state => state.quotationCreate)
-  const { 
-    loading: loadingCreate, 
-    success: successCreate, 
-    error: errorCreate, 
-    quotation: createdQuotation,
-  } = quotationCreate
-      
   const toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
-
+  
   cart.itemsPrice = toPrice(
     cart.cartItems.reduce((a, c) => a + c.qty * c.price, 0)
   );
-  cart.shippingFee = cart.itemsPrice > 10000 ? toPrice(0) : toPrice(100);
+  cart.shippingFee = cart.itemsPrice > 25000 ? toPrice(0) : toPrice(100);
   cart.totalPrice = cart.itemsPrice + cart.shippingFee;        
       
   const dispatch = useDispatch()
@@ -75,11 +65,50 @@ export default function QuotationCreateScreen({ history }) {
       dispatch({ type: CART_EMPTY });
       localStorage.removeItem('cartItems');
     }
-    // if (successCreate) {
-     
-    //   history.push('/sales/quotations/');
-    // }
-  }, [dispatch, history, successCreate, errorCreate])
+
+    if (createdQuotation) {
+      // var templateParams = {
+      //     name: customerName,
+      //     quotationId: createdQuotation._id,
+      //     orderItems: cart.cartItems,
+      //     itemName1: cart.cartItems[0].productName,
+      //     itemName2: cart.cartItems[1] ? cart.cartItems[1].productName : '',
+      //     itemName3: cart.cartItems[2] ? cart.cartItems[2].productName : '',
+      //     itemName4: cart.cartItems[3] ? cart.cartItems[3].productName : '',
+      //     itemName5: cart.cartItems[4] ? cart.cartItems[4].productName : '',
+      //     itemQty1: cart.cartItems[0].qty,
+      //     itemQty2: cart.cartItems[1] ? cart.cartItems[1].qty : '',
+      //     itemQty3: cart.cartItems[2] ? cart.cartItems[2].qty : '',
+      //     itemQty4: cart.cartItems[3] ? cart.cartItems[3].qty : '',
+      //     itemQty5: cart.cartItems[4] ? cart.cartItems[4].qty : '',
+      //     itemUnitPrice1: cart.cartItems[0].price,
+      //     itemUnitPrice2: cart.cartItems[1] ? cart.cartItems[1].price : '',
+      //     itemUnitPrice3: cart.cartItems[2] ? cart.cartItems[2].price : '',
+      //     itemUnitPrice4: cart.cartItems[3] ? cart.cartItems[3].price : '',
+      //     itemUnitPrice5: cart.cartItems[4] ? cart.cartItems[4].price : '',
+      //     itemSubTotal1: cart.cartItems[0].qty * cart.cartItems[0].price,
+      //     itemSubTotal2: cart.cartItems[1] ? (cart.cartItems[1].qty * cart.cartItems[1].price) : '',
+      //     itemSubTotal3: cart.cartItems[2] ? (cart.cartItems[2].qty * cart.cartItems[2].price) : '',
+      //     itemSubTotal4: cart.cartItems[3] ? (cart.cartItems[3].qty * cart.cartItems[3].price) : '',
+      //     itemSubTotal5: cart.cartItems[4] ? (cart.cartItems[4].qty * cart.cartItems[4].price) : '',
+      //     itemsPrice: cart.itemsPrice,
+      //     shippingFee: createdQuotation.shippingFee,
+      //     totalPrice: cart.totalPrice,
+      //     email: createdQuotation.invoiceAddress,
+      //   };
+        
+      //   emailjs.send('gmail', 'template_ngdfgsm', templateParams, "user_x0YouQzDgsn5hZdJ8u2Zs")
+      //     .then(response => {
+      //       console.log('SUCCESS!', response.status, response.text);
+      //   }, error => {
+      //         console.log('FAILED...', error);
+      //   }
+      // );
+      if (successCreate) {
+        history.push('/sales/quotations/');
+      }
+    }
+  }, [dispatch, history, createdQuotation, successCreate])
 
   const createQuotationHandler = () => {
     dispatch(
@@ -91,29 +120,6 @@ export default function QuotationCreateScreen({ history }) {
         totalPrice: cart.totalPrice,
       })
     )
-    
-    console.log('cqh customer', createdQuotation)
-    console.log('cqh customer email', createdQuotation.invoiceAddress)
-    var templateParams = {
-        name: customerName,
-        orderItems: cart.cartItems,
-        itemsPrice: cart.itemsPrice,
-        shippingFee: cart.shippingFee,
-        totalPrice: cart.totalPrice,
-        email: createdQuotation.invoiceAddress
-      };
-      
-      emailjs.send('gmail', 'template_ngdfgsm', templateParams, "user_x0YouQzDgsn5hZdJ8u2Zs")
-        .then(response => {
-          console.log('SUCCESS!', response.status, response.text);
-      }, error => {
-            console.log('FAILED...', error);
-      }
-    );
-    if (successCreate) {
-      dispatch({ type: QUOTATION_CREATE_RESET });
-      history.push('/sales/quotations/');
-    }
   }
   
   const discardHandler = () => {
@@ -137,14 +143,13 @@ export default function QuotationCreateScreen({ history }) {
     <main>
       <div>
         <Container>
-          {loading && <Loader></Loader>}
+          {loading && loadingCustomers && <Loader></Loader>}
           {error && <Message variant="danger">{error}</Message>}
 
           {errorCustomers && <Message variant="danger">{errorCustomers}</Message>}
           {errorCreate && <Message variant="danger">{errorCreate}</Message>}
 
-          {loadingCreate && <Loader></Loader>}
-
+          
           <h4>New Quotation</h4>
         <hr/>
         </Container>
@@ -184,19 +189,8 @@ export default function QuotationCreateScreen({ history }) {
               list="email" 
               placeholder='  Enter invoice address'
               value={customerName}
-              // onChange={(e) => {
-              //   setInvoiceAddress(e.target.value) }}
               readonly
             />
-            {/* <datalist id="email">
-              {
-                customers && customers.map((customer) => (
-                <option key={customer._id} value={customer.email}>
-                  {customer.fullName}
-                  </option>
-                ))
-              }
-            </datalist> */}
           </div>
           <br />
           <div className='mb-3'>
@@ -208,18 +202,8 @@ export default function QuotationCreateScreen({ history }) {
               list="address" 
               placeholder='  Enter delivery address'
               value={customerName}
-              // onChange={(e) => setDeliveryAddress(e.target.value)}
               readonly
             />
-            {/* <datalist id="address">
-              {
-                customers && customers.map((customer) => (
-                <option key={customer._id} value={customer.address}>
-                  {customer.fullName}
-                </option>
-                ))
-              }
-            </datalist> */}
           </div>
 
           
@@ -273,9 +257,15 @@ export default function QuotationCreateScreen({ history }) {
               }
             </tbody>
           </Table>
+
           <Link to='#' className='text-decoration-none text-info' onClick={handleShow}>
             + Add Product
           </Link>
+
+          {/* {loadingCreate &&
+            <Message variant="info">A copy of this sales quote has been sent to your customer.</Message>
+          } */}
+
           <div className='mt-3'>
             <span>
               <Button variant='danger' className='btn btn-sm mr-2' onClick={createQuotationHandler}>Save</Button>
@@ -288,68 +278,61 @@ export default function QuotationCreateScreen({ history }) {
             <Modal.Header closeButton>
               <Modal.Title>Add Product</Modal.Title>
             </Modal.Header>
-              <>
-                <Modal.Body>
-                    {/* TO DO:
-                      3. Fix cartItems >:(((  */}
-                    <form id='modalForm'>
-                      <div className='mb-3'>
-                        <label htmlFor='productName'>Product Name</label>
-                          <br />
-                          <input 
-                            id='productName'
-                            type="text" 
-                            list="products" 
-                            placeholder='  Enter product'
-                            value={productId}
-                            onChange={(e) => {
-                              setProductId(e.target.value)
-                              console.log('product id',productId)
-                            }}
-                            required
-                          />
-                          <datalist id="products">
-                            {
-                              products && products.map((product) => (
-                              <option key={product._id} value={product.productId}>
-                                {product.productName}
-                              </option>
-                              ))
-                            }
-                          </datalist>
-                      </div>
-      
-                      <div className='mb-3'>
-                        <label htmlFor="quantity">Quantity</label>
-                        <br/>
-                        <input
-                          id="quantity"
-                          type="text"
-                          placeholder="  Enter quantity"
-                          value={quantity}
-                          onChange={(e) => setQuantity(Number(e.target.value))}
-                          required
-                        ></input>
-                      </div>
-                    </form>
-  
-                    <div>
-                    
-                    </div>
-                  </Modal.Body>
-                  
-                  <Modal.Footer>
-                  <Button type='reset' variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    variant="primary" 
-                    onClick={submitHandler}
-                  >
-                    Add
-                  </Button>
-                </Modal.Footer>
-              </>
+            <Modal.Body>
+              <form id='modalForm'>
+                <div className='mb-3'>
+                  <label htmlFor='productName'>Product Name</label>
+                    <br />
+                    <input 
+                      id='productName'
+                      type="text" 
+                      list="products" 
+                      placeholder='  Enter product'
+                      value={productId}
+                      onChange={(e) => {setProductId(e.target.value)}}
+                      required
+                    />
+                    <datalist id="products">
+                      {
+                        products && products.map((product) => (
+                        <option key={product._id} value={product.productId}>
+                          {product.productName}
+                        </option>
+                        ))
+                      }
+                    </datalist>
+                </div>
+    
+                <div className='mb-3'>
+                  <label htmlFor="quantity">Quantity</label>
+                  <br/>
+                  <input
+                    id="quantity"
+                    type="text"
+                    placeholder="  Enter quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    required
+                  ></input>
+                </div>
+              </form>
+
+              <div>
+              
+              </div>
+            </Modal.Body>
+              
+            <Modal.Footer>
+              <Button type='reset' variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button
+                variant="primary" 
+                onClick={submitHandler}
+              >
+                Add
+              </Button>
+            </Modal.Footer>
           </Modal>
         </Container>
       </div>
