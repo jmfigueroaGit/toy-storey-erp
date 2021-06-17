@@ -1,18 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Table, Button, Container } from "react-bootstrap";
+import { Table, Button, Container, Modal } from "react-bootstrap";
 import EditProduct from "../screens/EditProductScreen.js";
-import Modal from "../components/Modal.js";
 import Moment from "react-moment";
 
 const ProductList = () => {
   const history = useHistory();
-
+  const [editProduct, setEditProduct] = useState(false)
   const [product, setProduct] = useState([]);
   const [sortType, setSortType] = useState("productName");
   const [order, setOrder] = useState("asc");
-  const [modal, setModal] = useState(false);
+  const [show, setShow] = useState(false);
   const [currentProduct, setCurrentProduct] = useState();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -31,6 +30,7 @@ const ProductList = () => {
   }, []);
 
   useEffect(() => {
+    console.log('ue editProduct state', editProduct)
     // initialize sort types
     const types = {
       productId: "productId",
@@ -72,11 +72,15 @@ const ProductList = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleCallBack = (state) => {
+    setEditProduct(state)
+  }
+
   return (
     <main>
       <Container>
           <h2>List of Toys</h2>
-          <span lassName='d-flex justify-content-between'>
+          <span className='d-flex justify-content-between my-3'>
             <input
               className="prompt"
               type="text"
@@ -85,9 +89,7 @@ const ProductList = () => {
             />
             <Button
               variant='danger'
-              onClick={() => {
-                history.push("/addProduct");
-              }}
+              onClick={() => setShow(true)}
             >
               Add New Product
             </Button>
@@ -195,7 +197,7 @@ const ProductList = () => {
               .map((val) => {
                 return (
                   <>
-                    <tr>
+                    <tr key={val._id}>
                       <td>{val.productId}</td>
                       <td>{val.productName}</td>
                       <td>{val.category}</td>
@@ -211,8 +213,10 @@ const ProductList = () => {
                       <td>
                         <Button
                           onClick={() => {
-                            setModal(true);
+                            setShow(true);
+                            setEditProduct(true);
                             setCurrentProduct(val);
+                            console.log(currentProduct)
                           }}
                         >
                           <i className='fas fa-edit' />
@@ -225,8 +229,22 @@ const ProductList = () => {
           </tbody>
         </Table>
       </Container>
-      <Modal isOpen={modal} isClose={() => setModal(false)}>
-        <EditProduct product={currentProduct} />
+      <Modal 
+        show={show} 
+        onHide={() => {
+          setShow(false)
+          setEditProduct(false)
+          setCurrentProduct()
+        }} 
+        backdrop="static" 
+        keyboard={false} 
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{editProduct ? 'Edit Product' : 'Add Product'}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <EditProduct product={currentProduct} editProduct={handleCallBack} editCurrentState={editProduct} />
+        </Modal.Body>
       </Modal>
     </main>
   );
