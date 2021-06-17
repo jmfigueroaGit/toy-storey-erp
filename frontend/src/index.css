@@ -488,9 +488,9 @@ tr td:last-child {
     outline: none !important;
 }
 
-.text-center{
+/* .text-center{
     padding: 5rem;
-}
+} */
 
 .spinner{
   width: 20px;

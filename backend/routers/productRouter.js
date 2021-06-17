@@ -13,7 +13,12 @@ router.get(
 )
 
 router.post("/addProduct", async (req, res) => {
-  const product = new Product({
+  const productExists = await Product.findOne({ productId: 'req.body.productId' })
+  if (productExists) {
+    res.send({ message: "Product Exists" })
+  } 
+  
+  const product = await Product.create({
     productId: req.body.productId,
     productName: req.body.productName,
     category: req.body.category,
@@ -21,9 +26,11 @@ router.post("/addProduct", async (req, res) => {
     price: req.body.price,
     quantity: req.body.quantity,
   });
-
-  const newProduct = await product.save();
-  res.send(product);
+  if (product) {
+    res.send(product);
+  } else {
+    res.status(500).send({ message: 'Add Product Failed. Try Again.'})
+  }
 });
 
 router.post("/updateProduct", async (req, res) => {

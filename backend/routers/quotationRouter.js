@@ -13,10 +13,10 @@ router.get(
   '/quotations/',
   asyncHandler(async (req, res) => {
     const quotations = await Quotation.find({})
-    if(quotations) {
+    if(quotations.length > 0) {
       res.json(quotations)
     } else {
-      res.status(500)
+      res.status(400).send({ message : 'Sales quote list empty' })
     }
   })
 )

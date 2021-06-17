@@ -32,7 +32,6 @@ function App() {
           <Route path='/sales/quotations' exact component={QuotationListScreen} />
           <Route path='/sales/customerlist/:id' component={CustomerScreen} />
           <Route path='/sales/customerlist' exact component={CustomerListScreen} />
-          <Route exact path="/addProduct" component={AddProduct} />
           <Route exact path="/sales" component={SalesList} />
           <Route exact path="/inventory" component={ProductList} />
           <Route path='/' exact component={HomeScreen} />

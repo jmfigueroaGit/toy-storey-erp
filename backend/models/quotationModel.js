@@ -27,7 +27,7 @@ const quotationSchema = new mongoose.Schema(
     toInvoice: { type: Boolean, default: false },
   },
   {
-    timestamp: true
+    timestamps: true
   }
 )
 

@@ -14,6 +14,7 @@ try {
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true,
+        useFindAndModify: false,
     })
 
     console.log(`Mongo DB Connected: ${db.connection.host}`)
